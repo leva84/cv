@@ -70,7 +70,6 @@ class DeployManager
   def deploy_to_gh_pages
     logger.info "Switching to the 'gh-pages' branch for deployment."
 
-    # Проверяем наличие ветки gh-pages, если ее нет — создаем
     unless system('git show-ref --quiet refs/heads/gh-pages')
       logger.info "'gh-pages' branch does not exist. Creating it..."
       system('git checkout --orphan gh-pages') ||
@@ -81,15 +80,12 @@ class DeployManager
       system('git push origin gh-pages') || abort('Error while pushing gh-pages branch.')
     end
 
-    # Переключаемся на ветку gh-pages
     system('git checkout gh-pages') || abort('Error while switching to gh-pages branch.')
 
     logger.info "Copying new files to 'gh-pages/docs'..."
-    # Копируем только содержимое папки docs из ветки main
     system('git checkout main -- docs') || abort('Error while copying docs folder.')
 
     logger.info "Staging only changes from the 'docs' directory..."
-    # Добавляем в индекс только папку docs, избегая глобального git add
     system('git add docs') || abort('Error while staging docs folder.')
 
     logger.info "Committing changes to 'gh-pages'."
@@ -99,7 +95,6 @@ class DeployManager
     logger.info 'Pushing changes to origin/gh-pages.'
     system('git push origin gh-pages') || abort('Error while pushing changes to gh-pages branch.')
 
-    # Возвращаемся на основную ветку
     logger.info "Switching back to '#{current_branch}' branch."
     system("git checkout #{current_branch}") || abort('Error while switching back to main branch.')
 
