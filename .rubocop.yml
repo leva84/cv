@@ -4,3 +4,7 @@ AllCops:
   SuggestExtensions: false
   Exclude:
     - 'Rakefile'
+
+# Layout
+Layout/SpaceInsideStringInterpolation:
+  Enabled: false
