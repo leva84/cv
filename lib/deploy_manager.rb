@@ -69,7 +69,7 @@ class DeployManager
   # Step 6: Deet site in gh-pages
   def deploy_to_gh_pages
     logger.info "Deploying files from '#{ output_dir }' to gh-pages..."
-    system("git subtree push -f --prefix #{ output_dir } origin gh-pages") ||
+    system("git subtree push --prefix #{ output_dir } origin gh-pages --force") ||
       abort('Error while deploying to GitHub.')
   end
 end
