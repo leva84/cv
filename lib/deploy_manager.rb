@@ -2,7 +2,7 @@
 
 require 'logger'
 
-# DeployManager controls the deploy process on Github Pages
+# Deploymanager controls the deploy process on Github Pages
 class DeployManager
   attr_reader :logger, :current_branch, :output_dir
 
@@ -68,15 +68,11 @@ class DeployManager
 
   # Step 6: Deploy site in gh-pages
   def deploy_to_gh_pages
-    stash_untracked_changes
-
     logger.info "Switching to the 'gh-pages' branch for deployment."
     ensure_branch_exists
     switch_to_gh_pages_branch
     commit_docs_changes
     push_gh_pages_changes
-
-    logger.info "Switching back to the '#{current_branch}' branch."
     switch_back_to_main_branch
   end
 
@@ -89,7 +85,6 @@ class DeployManager
 
   def switch_to_gh_pages_branch
     system('git checkout gh-pages') || abort('Error while switching to gh-pages branch.')
-    restore_stashed_changes
   end
 
   def commit_docs_changes
@@ -113,34 +108,7 @@ class DeployManager
   end
 
   def switch_back_to_main_branch
-    system("git checkout #{current_branch}") || abort('Error while switching back to main branch.')
-    restore_stashed_changes
-  end
-
-  # Save untracked and unstaged changes in stash
-  def stash_untracked_changes
-    logger.info 'Saving untracked files to stash...'
-    success = system('git stash push --include-untracked')
-    if success
-      logger.info 'Successfully stashed untracked and unstaged changes.'
-    else
-      logger.info 'No changes to stash or an error occurred while stashing.'
-    end
-  end
-
-  # Restore changes from stash
-  def restore_stashed_changes
-    stash_list = `git stash list`.strip
-    if stash_list.empty?
-      logger.info 'No stashed changes to restore.'
-    else
-      logger.info 'Restoring previously stashed changes...'
-      success = system('git stash pop')
-      if success
-        logger.info 'Successfully restored stashed changes.'
-      else
-        abort('Error while restoring stashed changes.')
-      end
-    end
+    logger.info "Switching back to '#{ current_branch }' branch."
+    system("git checkout #{ current_branch }") || abort('Error while switching back to main branch.')
   end
 end
