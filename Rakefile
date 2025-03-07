@@ -5,9 +5,11 @@ end
 desc 'Compile all SLIM templates in html'
 task :build do
   require_relative 'lib/slim_compiler'
-  # Создаём объект нашего компилятора
-  compiler = SlimCompiler.new(view_dir: 'views', output_dir: 'docs')
+  SlimCompiler.new.compile_all
+end
 
-  # Компилируем все шаблоны
-  compiler.compile_all
+desc 'Deploy site to GitHub Pages'
+task :deploy do
+  require_relative 'lib/deploy_manager'
+  DeployManager.new.deploy
 end
