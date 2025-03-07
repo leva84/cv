@@ -85,7 +85,7 @@ class DeployManager
     system('git checkout gh-pages') || abort('Error while switching to gh-pages branch.')
 
     logger.info "Copying new files to 'gh-pages/docs'..."
-    system('git checkout main docs -- docs') || abort('Error while copying docs folder.')
+    system('git checkout main -- docs') || abort('Error while copying docs folder.')
 
     # Добавляем изменения и пушим
     logger.info "Committing changes to 'gh-pages'."
