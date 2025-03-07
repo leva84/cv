@@ -68,10 +68,37 @@ class DeployManager
 
   # Step 6: Deet site in gh-pages
   def deploy_to_gh_pages
-    logger.info "Deploying folder 'docs/' to 'gh-pages/docs'..."
+    logger.info "Switching to the 'gh-pages' branch for deployment."
 
-    system('git subtree push -f --prefix docs origin gh-pages') ||
-      abort('Error while deploying the docs/ folder to GitHub Pages.')
+    # Проверяем наличие ветки gh-pages, если ее нет — создаем
+    unless system('git show-ref --quiet refs/heads/gh-pages')
+      logger.info "'gh-pages' branch does not exist. Creating it..."
+      system('git checkout --orphan gh-pages') ||
+        abort('Error while creating gh-pages branch.')
+      system('git rm -rf .') || abort('Error while clearing initial contents.')
+      system('git commit --allow-empty -m "Initialize gh-pages branch"') ||
+        abort('Error while initializing gh-pages branch.')
+      system('git push origin gh-pages') || abort('Error while pushing gh-pages branch.')
+    end
+
+    # Переключаемся на ветку gh-pages
+    system('git checkout gh-pages') || abort('Error while switching to gh-pages branch.')
+
+    logger.info "Copying new files to 'gh-pages/docs'..."
+    system('git checkout main docs -- docs') || abort('Error while copying docs folder.')
+
+    # Добавляем изменения и пушим
+    logger.info "Committing changes to 'gh-pages'."
+    system('git add docs') || abort('Error while adding docs folder to git.')
+    system('git commit -m "Update gh-pages with new deployment"') ||
+      abort('Error while committing changes.')
+
+    logger.info 'Pushing changes to origin/gh-pages.'
+    system('git push origin gh-pages') || abort('Error while pushing changes to gh-pages branch.')
+
+    # Возвращаемся на основную ветку
+    logger.info "Switching back to '#{current_branch}' branch."
+    system("git checkout #{current_branch}") || abort('Error while switching back to main branch.')
 
     logger.info 'Deployment to gh-pages completed successfully!'
   end
