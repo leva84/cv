@@ -1,0 +1,25 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+}
+
+h1, h2 {
+    color: #007bff;
+}
+
+.timeline {
+    list-style: none;
+    padding-left: 20px;
+}
+
+.timeline-event {
+    margin-bottom: 15px;
+}
+
+.timeline-event h5 {
+    margin-bottom: 5px;
+}
+
+.rounded-circle {
+    border: 5px solid #007bff;
+}
