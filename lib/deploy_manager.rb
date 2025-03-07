@@ -75,11 +75,11 @@ class DeployManager
     run_command('git fetch origin')
 
     # Perform targeted checkout of the docs directory from main
-    run_command("git checkout origin/#{ MAIN_BRANCH } -- #{output_dir}")
+    run_command("git checkout origin/#{ MAIN_BRANCH } -- #{ output_dir }")
     stage_changes(output_dir)
 
     # Commit if there are any changes
-    commit_changes("Merge #{output_dir} directory from #{ MAIN_BRANCH } to #{ GH_PAGES_BRANCH }", skip_empty: true)
+    commit_changes("Merge #{ output_dir } directory from #{ MAIN_BRANCH } to #{ GH_PAGES_BRANCH }", skip_empty: true)
   end
 
   # Push changes to the remote repository
