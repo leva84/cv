@@ -69,7 +69,19 @@ class DeployManager
   # Step 6: Deet site in gh-pages
   def deploy_to_gh_pages
     logger.info "Deploying files from '#{ output_dir }' to gh-pages..."
-    system("git subtree push --prefix #{ output_dir } origin gh-pages --force") ||
+
+    # Создание временной ветки для деплоя
+    system("git subtree split --prefix #{output_dir} -b temp-deploy") ||
+      abort('Error while creating temporary branch for deploy.')
+
+    # Пушим изменения в ветку gh-pages с --force
+    system('git push origin temp-deploy:gh-pages --force') ||
       abort('Error while deploying to GitHub.')
+
+    # Удаляем временную ветку
+    system('git branch -D temp-deploy') ||
+      abort('Error while deleting temporary branch.')
+
+    logger.info 'Deployment to gh-pages completed successfully!'
   end
 end
