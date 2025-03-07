@@ -8,8 +8,13 @@ GEM
     tilt (2.6.0)
 
 PLATFORMS
+  arm64-darwin
   arm64-darwin-24
+  java
   ruby
+  x86_64-darwin
+  x86_64-linux
+  x86_64-unknown
 
 DEPENDENCIES
   slim
