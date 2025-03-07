@@ -94,7 +94,7 @@ class DeployManager
       abort('Error while committing changes.')
 
     logger.info 'Pushing changes to origin/gh-pages.'
-    system('git push origin gh-pages') || abort('Error while pushing changes to gh-pages branch.')
+    system('git push -f origin gh-pages') || abort('Error while pushing changes to gh-pages branch.')
 
     # Возвращаемся на основную ветку
     logger.info "Switching back to '#{current_branch}' branch."
