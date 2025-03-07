@@ -86,8 +86,6 @@ class DeployManager
     system('git commit --allow-empty -m "Initialize gh-pages branch"') ||
       abort('Error while initializing gh-pages branch.')
     system('git push origin gh-pages') || abort('Error while pushing gh-pages branch.')
-
-    logger.info 'Deployment to gh-pages completed successfully!'
   end
 
   def switch_to_gh_pages_branch
@@ -111,6 +109,7 @@ class DeployManager
   def push_gh_pages_changes
     logger.info 'Pushing changes to origin/gh-pages.'
     system('git push origin gh-pages') || abort('Error while pushing changes to gh-pages branch.')
+    logger.info 'Deployment to gh-pages completed successfully!'
   end
 
   def switch_back_to_main_branch
