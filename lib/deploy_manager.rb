@@ -95,8 +95,8 @@ class DeployManager
     logger.info 'Pushing changes to origin/gh-pages.'
     system('git push origin gh-pages') || abort('Error while pushing changes to gh-pages branch.')
 
-    logger.info "Switching back to '#{current_branch}' branch."
-    system("git checkout #{current_branch}") || abort('Error while switching back to main branch.')
+    logger.info "Switching back to '#{ current_branch }' branch."
+    system("git checkout #{ current_branch }") || abort('Error while switching back to main branch.')
 
     logger.info 'Deployment to gh-pages completed successfully!'
   end

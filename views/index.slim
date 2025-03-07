@@ -5,7 +5,7 @@ html
     meta name='viewport' content='width=device-width, initial-scale=1.0'
     title Резюме Дениса Левченко
     link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css'
-    link rel='stylesheet' href='../docs/assets/custom.css'
+    link rel='stylesheet' href='#{BASE_URL}assets/custom.css'
   body
     .container.my-5
       //- Подключаем вручную другие части
@@ -22,4 +22,4 @@ html
       == Slim::Template.new("views/_languages.slim").render
 
     script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js'
-    script src='../docs/assets/scripts.js'
+    script src='#{BASE_URL}assets/scripts.js'
