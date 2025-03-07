@@ -78,6 +78,7 @@ class DeployManager
     push_gh_pages_changes
 
     logger.info "Switching back to the '#{ current_branch }' branch."
+    switching_back_to_main
   end
 
   def ensure_branch_exists
@@ -105,5 +106,9 @@ class DeployManager
     logger.info 'Pushing changes to origin/gh-pages.'
     system('git push -u origin gh-pages') || abort('Error while pushing changes to gh-pages branch.')
     logger.info 'Deployment to gh-pages completed successfully!'
+  end
+
+  def switching_back_to_main
+    system('git checkout main') || abort('Error while switching back to main branch.')
   end
 end
