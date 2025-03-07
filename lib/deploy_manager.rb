@@ -2,113 +2,135 @@
 
 require 'logger'
 
-# Deploymanager controls the deploy process on Github Pages
+# DeployManager handles the deployment process to GitHub Pages
 class DeployManager
-  attr_reader :logger, :current_branch, :output_dir
+  MAIN_BRANCH = 'main'
+  GH_PAGES_BRANCH = 'gh-pages'
+  DOCS_DIR = 'docs'
 
-  def initialize(output_dir: 'docs', logger: Logger.new($stdout))
+  attr_reader :logger, :output_dir
+
+  def initialize(output_dir: DOCS_DIR, logger: Logger.new($stdout))
     @logger = logger
     @output_dir = output_dir
-    @current_branch = `git branch --show-current`.strip
   end
 
   def deploy
-    check_main_branch
+    ensure_on_branch(MAIN_BRANCH)
     logger.info 'Starting deployment process...'
 
     build_site
-    add_changes_to_git
-    commit_changes
-    push_changes_to_main
+    stage_changes
+    commit_changes("Deploy updated site - #{ Time.now.strftime('%Y-%m-%d %H:%M:%S') }")
+    push_changes(MAIN_BRANCH)
     deploy_to_gh_pages
 
-    logger.info 'Deployment completed successfully 🎉'
+    logger.info 'Deployment successfully completed 🎉'
   end
 
   private
 
-  # Step 1: Checking the current branch
-  def check_main_branch
-    if current_branch != 'main'
-      abort("Error: Deployment is allowed only from the 'main' branch. Current branch: '#{ current_branch }'")
-    end
-    logger.info "You are on the 'main' branch. Proceeding with deployment..."
-  end
+  ### Main stages ###
 
-  # Step 2: Building the site
+  # Builds static site
   def build_site
-    logger.info 'Building the site...'
-    Rake::Task['build'].invoke
+    logger.info 'Building site...'
+    run_command('rake build')
   end
 
-  # Step 3: Adding all changes to Git
-  def add_changes_to_git
-    logger.info 'Adding changes to Git...'
-    system('git add .') || abort('Error while adding files to Git.')
-  end
-
-  # Step 4: Committing changes, if there is something to commit
-  def commit_changes
-    logger.info 'Checking for changes to commit...'
-    status = `git status --porcelain`.strip
-
-    if status.empty?
-      logger.info 'No changes to commit. Skipping commit step...'
-    else
-      logger.info 'Creating a new commit...'
-      system('git commit -m "Deploy updated site"') || abort('Error committing changes.')
-    end
-  end
-
-  # Step 5: Pushing changes to main
-  def push_changes_to_main
-    logger.info "Pushing changes to branch '#{ current_branch }'..."
-    system("git push origin #{ current_branch }") || abort('Error while pushing changes to main.')
-  end
-
-  # Step 6: Deploy site in gh-pages
+  # Deploys site to gh-pages branch
   def deploy_to_gh_pages
-    logger.info "Ensuring 'gh-pages' branch exists..."
-    ensure_branch_exists
+    ensure_branch_exists(GH_PAGES_BRANCH)
 
-    logger.info "Merging 'docs' directory from 'main' into 'gh-pages'..."
-    merge_docs_from_main_into_gh_pages
+    logger.info "Merging '#{ DOCS_DIR }' directory from '#{ MAIN_BRANCH }' to '#{ GH_PAGES_BRANCH} '..."
+    merge_docs_from_main
 
-    logger.info "Deployment to 'gh-pages' branch starting..."
-    push_gh_pages_changes
+    logger.info "Pushing changes to '#{ GH_PAGES_BRANCH }' branch..."
+    push_changes(GH_PAGES_BRANCH)
 
-    logger.info "Switching back to the '#{ current_branch }' branch."
-    switching_back_to_main
+    ensure_on_branch(MAIN_BRANCH)
   end
 
-  def ensure_branch_exists
-    return if system('git show-ref --quiet refs/heads/gh-pages')
+  ### Git operations ###
 
-    logger.info "'gh-pages' branch does not exist. Creating it..."
-    system('git checkout -b gh-pages') || abort('Error while creating gh-pages branch.')
-    system('git push -u origin gh-pages') || abort('Error while pushing new gh-pages branch to origin.')
+  def ensure_on_branch(branch)
+    current_branch = `git branch --show-current`.strip
+    if current_branch != branch
+      logger.info "Switching to branch '#{ branch }'..."
+      run_command("git checkout #{ branch }")
+    end
+    logger.info "Now on branch '#{ branch }'."
   end
 
-  def merge_docs_from_main_into_gh_pages
-    system('git checkout gh-pages') || abort('Error while switching to gh-pages branch for merging.')
-    system('git fetch origin') || abort('Error while fetching updates from origin.')
+  def ensure_branch_exists(branch)
+    return if branch_exists?(branch)
 
-    result = system('git checkout origin/main -- docs')
-    abort('Error while merging docs from main into gh-pages. Resolve conflicts manually.') unless result
-    logger.info "'docs' directory successfully merged from 'main' into 'gh-pages'."
-
-    system('git add docs') || abort("Error while staging 'docs' changes.")
-    result = system('git commit -m "Merge docs directory from main into gh-pages"')
-    logger.info 'No changes detected in docs during merge. Skipping commit.' unless result
+    logger.info "Branch '#{ branch }' does not exist. Creating it..."
+    run_command("git checkout -b #{ branch }")
+    run_command("git push -u origin #{ branch }")
   end
 
-  def push_gh_pages_changes
-    logger.info 'Pushing changes to origin/gh-pages.'
-    system('git push -u origin gh-pages') || abort('Error while pushing changes to gh-pages branch.')
-    logger.info 'Deployment to gh-pages completed successfully!'
+  def merge_docs_from_main
+    ensure_on_branch(GH_PAGES_BRANCH)
+    run_command('git fetch origin')
+
+    # Perform targeted checkout of the docs directory from main
+    run_command("git checkout origin/#{ MAIN_BRANCH } -- #{output_dir}")
+    stage_changes(output_dir)
+
+    # Commit if there are any changes
+    commit_changes("Merge #{output_dir} directory from #{ MAIN_BRANCH } to #{ GH_PAGES_BRANCH }", skip_empty: true)
   end
 
-  def switching_back_to_main
-    system('git checkout main') || abort('Error while switching back to main branch.')
+  # Push changes to the remote repository
+  def push_changes(branch)
+    logger.info "Pushing changes to remote branch '#{ branch }'..."
+    run_command("git push origin #{ branch }")
+  end
+
+  ### Git helper methods ###
+
+  # Add changes to staging (for a directory or all by default)
+  def stage_changes(target = '.')
+    logger.info "Staging changes for '#{ target }'..."
+    run_command("git add #{ target }")
+  end
+
+  # Commit changes with a message
+  def commit_changes(message, skip_empty: false)
+    if git_status_clean?
+      if skip_empty
+        logger.info 'No changes to commit. Skipping...'
+        return
+      end
+      abort_with_log("No changes detected. Aborting commit: #{ message }")
+    end
+
+    logger.info "Committing changes: #{ message }"
+    run_command("git commit -m \"#{ message }\"")
+  end
+
+  # Check if working directory is clean
+  def git_status_clean?
+    `git status --porcelain`.strip.empty?
+  end
+
+  # Check if branch exists locally or remotely
+  def branch_exists?(branch)
+    system("git show-ref --quiet refs/heads/#{ branch }") ||
+      system("git show-ref --quiet refs/remotes/origin/#{ branch }")
+  end
+
+  ### Command wrapper ###
+
+  def run_command(cmd)
+    result = system(cmd)
+    abort_with_log("Command failed: #{ cmd }") unless result
+    result
+  end
+
+  def abort_with_log(message)
+    logger.error(message)
+    abort(message)
   end
 end
