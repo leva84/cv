@@ -70,8 +70,7 @@ class DeployManager
   def deploy_to_gh_pages
     logger.info "Deploying folder 'docs/' to 'gh-pages/docs'..."
 
-    # Создаём временную ветку, содержащую всё, что есть в директории docs/
-    system('git subtree push --prefix docs origin gh-pages') ||
+    system('git subtree push -f --prefix docs origin gh-pages') ||
       abort('Error while deploying the docs/ folder to GitHub Pages.')
 
     logger.info 'Deployment to gh-pages completed successfully!'
