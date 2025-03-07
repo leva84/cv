@@ -74,8 +74,6 @@ class DeployManager
     commit_docs_changes
     push_gh_pages_changes
     switch_back_to_main_branch
-
-    logger.info 'Deployment to gh-pages completed successfully!'
   end
 
   def ensure_branch_exists
@@ -88,6 +86,8 @@ class DeployManager
     system('git commit --allow-empty -m "Initialize gh-pages branch"') ||
       abort('Error while initializing gh-pages branch.')
     system('git push origin gh-pages') || abort('Error while pushing gh-pages branch.')
+
+    logger.info 'Deployment to gh-pages completed successfully!'
   end
 
   def switch_to_gh_pages_branch
