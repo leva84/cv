@@ -71,7 +71,7 @@ class DeployManager
     logger.info "Switching to the 'gh-pages' branch for deployment."
     ensure_branch_exists
     switch_to_gh_pages_branch
-    copy_docs_folder
+    # copy_docs_folder
     commit_docs_changes
     push_gh_pages_changes
     switch_back_to_main_branch
@@ -95,17 +95,32 @@ class DeployManager
     system('git checkout gh-pages') || abort('Error while switching to gh-pages branch.')
   end
 
-  def copy_docs_folder
-    logger.info "Copying new files to 'gh-pages/docs'..."
-    system('git checkout main -- docs') || abort('Error while copying docs folder.')
-    logger.info "Staging only changes from the 'docs' directory..."
-    system('git add docs') || abort('Error while staging docs folder.')
-  end
+  # def copy_docs_folder
+  #   logger.info "Copying new files to 'gh-pages/docs'..."
+  #   system('git checkout main -- docs') || abort('Error while copying docs folder.')
+  #   logger.info "Staging only changes from the 'docs' directory..."
+  #   system('git add docs') || abort('Error while staging docs folder.')
+  # end
 
   def commit_docs_changes
-    logger.info "Committing changes to 'gh-pages'."
-    system('git commit -m "Update docs in gh-pages"') ||
-      logger.info('No changes to commit, skipping...')
+    # logger.info "Committing changes to 'gh-pages'."
+    # system('git commit -m "Update docs in gh-pages"') ||
+    #   logger.info('No changes to commit, skipping...')
+
+    logger.info "Checking for changes in the 'docs' directory..."
+
+    # Проверяем статус папки docs
+    status = `git status --porcelain #{ output_dir }`.strip
+
+    if status.empty?
+      logger.info "No changes detected in the '#{ output_dir }' directory. Skipping commit."
+    else
+      logger.info "Changes detected in '#{ output_dir }'. Staging and committing..."
+
+      # Добавляем изменения в индекс и коммитим
+      system("git add #{ output_dir }") || abort("Error while staging changes in '#{ output_dir }'.")
+      system('git commit -m "Update docs in gh-pages"') || logger.info('No changes to commit, skipping...')
+    end
   end
 
   def push_gh_pages_changes
