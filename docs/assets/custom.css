@@ -1,8 +1,9 @@
 @import url('css/header.css');
+@import url('css/about.css');
 
 body {
     font-family: 'Segoe UI', Tahoma, sans-serif;
-    background-color: #f5f5f5;
+    background-color: rgba(99, 242, 253, 0.19);
     color: #333;
 }
 

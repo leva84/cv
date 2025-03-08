@@ -1,0 +1,19 @@
+
+.about_section {
+    /*background: linear-gradient(to bottom,#3498db, #2c3e50);*/
+
+    background: linear-gradient(to bottom, rgba(17, 100, 156, 0.7), rgba(33, 131, 228, 0.5));
+    color: white;
+}
+
+.about_section h2 {
+    font-weight: 700;
+    text-transform: uppercase;
+    position: relative;
+
+}
+
+.about_section p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
