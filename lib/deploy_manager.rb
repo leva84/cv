@@ -45,17 +45,8 @@ class DeployManager
     FileUtils.cp_r("#{ DOCS_DIR }/.", TEMP_DIR)
   end
 
-  # def build_site_to_temp
-  #   build_site
-  #   logger.info "Building site into temporary directory: #{ TEMP_DIR }..."
-  #   FileUtils.rm_rf(TEMP_DIR) # Ensure temp dir is clean
-  #   FileUtils.mkdir_p(TEMP_DIR) # Recreate temp dir
-  #   run_command("RECORD_DIR=#{ TEMP_DIR } rake build")
-  # end
-
   # Deploys site to gh-pages branch
   def deploy_to_gh_pages
-    # ensure_branch_exists(GH_PAGES_BRANCH)
     ensure_on_branch(GH_PAGES_BRANCH)
 
     # Restore files from TEMP_DIR to DOCS_DIR
@@ -83,26 +74,6 @@ class DeployManager
     end
     logger.info "Now on branch '#{ branch }'."
   end
-
-  # def ensure_branch_exists(branch)
-  #   return if branch_exists?(branch)
-  #
-  #   logger.info "Branch '#{ branch }' does not exist. Creating it..."
-  #   run_command("git checkout -b #{ branch }")
-  #   run_command("git push -u origin #{ branch }")
-  # end
-
-  # def merge_docs_from_main
-  #   ensure_on_branch(GH_PAGES_BRANCH)
-  #   run_command('git fetch origin')
-  #
-  #   # Perform targeted checkout of the docs directory from main
-  #   run_command("git checkout origin/#{ MAIN_BRANCH } -- #{ output_dir }")
-  #   stage_changes(output_dir)
-  #
-  #   # Commit if there are any changes
-  #   commit_changes("Merge #{ output_dir } directory from #{ MAIN_BRANCH } to #{ GH_PAGES_BRANCH }", skip_empty: true)
-  # end
 
   # Push changes to the remote repository
   def push_changes(branch)
@@ -136,12 +107,6 @@ class DeployManager
   def git_status_clean?
     `git status --porcelain`.strip.empty?
   end
-
-  # Check if branch exists locally or remotely
-  # def branch_exists?(branch)
-  #   system("git show-ref --quiet refs/heads/#{ branch }") ||
-  #     system("git show-ref --quiet refs/remotes/origin/#{ branch }")
-  # end
 
   ### Command wrapper ###
 

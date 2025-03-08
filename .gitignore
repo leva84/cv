@@ -1,3 +1,5 @@
 .idea
 tmp
 !tmp/.keep
+docs
+!docs/assets
