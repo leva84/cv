@@ -1,10 +1,10 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
+    background-color: #b2cfec;
 }
 
 h1, h2 {
-    color: #007bff;
+    color: #b89406;
 }
 
 .timeline {
@@ -21,5 +21,5 @@ h1, h2 {
 }
 
 .rounded-circle {
-    border: 5px solid #007bff;
+    border: 5px solid #b89406;
 }
