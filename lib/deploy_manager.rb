@@ -7,6 +7,7 @@ class DeployManager
   MAIN_BRANCH = 'main'
   GH_PAGES_BRANCH = 'gh-pages'
   DOCS_DIR = 'docs'
+  TEMP_DIR = '/tmp/deploy_docs'
 
   attr_reader :logger, :output_dir
 
@@ -19,7 +20,7 @@ class DeployManager
     ensure_on_branch(MAIN_BRANCH)
     logger.info 'Starting deployment process...'
 
-    build_site
+    build_site_to_temp
     stage_changes
     commit_changes("Deploy updated site - #{ Time.now.strftime('%Y-%m-%d %H:%M:%S') }")
     push_changes(MAIN_BRANCH)
@@ -33,19 +34,33 @@ class DeployManager
   ### Main stages ###
 
   # Builds static site
-  def build_site
-    logger.info 'Building site...'
-    run_command('rake build')
+  # def build_site
+  #   logger.info 'Building site...'
+  #   run_command('rake build')
+  # end
+
+  def build_site_to_temp
+    logger.info "Building site into temporary directory: #{TEMP_DIR}..."
+    # FileUtils.rm_rf(TEMP_DIR) # Ensure temp dir is clean
+    FileUtils.mkdir_p(TEMP_DIR) # Recreate temp dir
+    run_command("rake build OUTPUT_DIR=#{ TEMP_DIR }")
   end
 
   # Deploys site to gh-pages branch
   def deploy_to_gh_pages
-    ensure_branch_exists(GH_PAGES_BRANCH)
+    # ensure_branch_exists(GH_PAGES_BRANCH)
+    ensure_on_branch(GH_PAGES_BRANCH)
 
-    logger.info "Merging '#{ DOCS_DIR }' directory from '#{ MAIN_BRANCH }' to '#{ GH_PAGES_BRANCH} '..."
-    merge_docs_from_main
+    # Restore files from TEMP_DIR to DOCS_DIR
+    logger.info "Copying files from temporary directory '#{ TEMP_DIR }' to '#{ DOCS_DIR }'..."
+    FileUtils.rm_rf(output_dir) # Clear docs/ content
+    FileUtils.mkdir_p(output_dir) # Recreate docs/ directory
+    FileUtils.cp_r("#{ TEMP_DIR }/.", output_dir)
 
-    logger.info "Pushing changes to '#{ GH_PAGES_BRANCH }' branch..."
+    # Stage and commit changes in the gh-pages branch
+    logger.info "Committing changes to #{ GH_PAGES_BRANCH }..."
+    stage_changes(output_dir)
+    commit_changes("Deploy updated site - #{ Time.now.strftime('%Y-%m-%d %H:%M:%S') }", skip_empty: true)
     push_changes(GH_PAGES_BRANCH)
 
     ensure_on_branch(MAIN_BRANCH)
@@ -62,25 +77,25 @@ class DeployManager
     logger.info "Now on branch '#{ branch }'."
   end
 
-  def ensure_branch_exists(branch)
-    return if branch_exists?(branch)
+  # def ensure_branch_exists(branch)
+  #   return if branch_exists?(branch)
+  #
+  #   logger.info "Branch '#{ branch }' does not exist. Creating it..."
+  #   run_command("git checkout -b #{ branch }")
+  #   run_command("git push -u origin #{ branch }")
+  # end
 
-    logger.info "Branch '#{ branch }' does not exist. Creating it..."
-    run_command("git checkout -b #{ branch }")
-    run_command("git push -u origin #{ branch }")
-  end
-
-  def merge_docs_from_main
-    ensure_on_branch(GH_PAGES_BRANCH)
-    run_command('git fetch origin')
-
-    # Perform targeted checkout of the docs directory from main
-    run_command("git checkout origin/#{ MAIN_BRANCH } -- #{ output_dir }")
-    stage_changes(output_dir)
-
-    # Commit if there are any changes
-    commit_changes("Merge #{ output_dir } directory from #{ MAIN_BRANCH } to #{ GH_PAGES_BRANCH }", skip_empty: true)
-  end
+  # def merge_docs_from_main
+  #   ensure_on_branch(GH_PAGES_BRANCH)
+  #   run_command('git fetch origin')
+  #
+  #   # Perform targeted checkout of the docs directory from main
+  #   run_command("git checkout origin/#{ MAIN_BRANCH } -- #{ output_dir }")
+  #   stage_changes(output_dir)
+  #
+  #   # Commit if there are any changes
+  #   commit_changes("Merge #{ output_dir } directory from #{ MAIN_BRANCH } to #{ GH_PAGES_BRANCH }", skip_empty: true)
+  # end
 
   # Push changes to the remote repository
   def push_changes(branch)
@@ -116,10 +131,10 @@ class DeployManager
   end
 
   # Check if branch exists locally or remotely
-  def branch_exists?(branch)
-    system("git show-ref --quiet refs/heads/#{ branch }") ||
-      system("git show-ref --quiet refs/remotes/origin/#{ branch }")
-  end
+  # def branch_exists?(branch)
+  #   system("git show-ref --quiet refs/heads/#{ branch }") ||
+  #     system("git show-ref --quiet refs/remotes/origin/#{ branch }")
+  # end
 
   ### Command wrapper ###
 

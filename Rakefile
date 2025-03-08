@@ -3,9 +3,10 @@ task :default do
 end
 
 desc 'Compile all SLIM templates in html'
-task :build do
+task :build, [:output_dir] do |_, args|
+  output_dir = args[:output_dir] || 'docs'
   require_relative 'lib/slim_compiler'
-  SlimCompiler.new.compile_all
+  SlimCompiler.new(output_dir: output_dir).compile_all
 end
 
 desc 'Deploy site to GitHub Pages'
