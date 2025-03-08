@@ -96,12 +96,7 @@ class DeployManager
   ### Command wrapper ###
   def run_command(cmd)
     result = system(cmd)
-    abort_with_log("Command failed: #{ cmd }") unless result
+    abort("Command failed: #{ cmd }") unless result
     result
-  end
-
-  def abort_with_log(message)
-    logger.error(message)
-    abort(message)
   end
 end
