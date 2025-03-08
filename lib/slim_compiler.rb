@@ -17,11 +17,11 @@ class SlimCompiler
   end
 
   def compile_all
-    logger.info "Compilation of templates from '#{view_dir}' to '#{output_dir}'..."
+    logger.info "Compilation of templates from '#{ view_dir }' to '#{ output_dir }'..."
 
     FileUtils.mkdir_p(output_dir)
 
-    Dir.glob("#{view_dir}/*.slim").each do |slim_file|
+    Dir.glob("#{ view_dir }/*.slim").each do |slim_file|
       compile_slim(slim_file)
     end
 
@@ -31,9 +31,9 @@ class SlimCompiler
   private
 
   def compile_slim(slim_file)
-    html_file = File.join(output_dir, "#{File.basename(slim_file, '.slim')}.html")
+    html_file = File.join(output_dir, "#{ File.basename(slim_file, '.slim') }.html")
 
     File.write(html_file, Slim::Template.new(slim_file).render)
-    logger.info "Compiled: #{slim_file} -> #{html_file}"
+    logger.info "Compiled: #{ slim_file } -> #{ html_file }"
   end
 end

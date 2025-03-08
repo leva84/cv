@@ -3,8 +3,8 @@ task :default do
 end
 
 desc 'Compile all SLIM templates in html'
-task :build, [:output_dir] do |_, args|
-  output_dir = args[:output_dir] || 'docs'
+task :build do
+  output_dir = ENV['RECORD_DIR'] || 'docs'
   require_relative 'lib/slim_compiler'
   SlimCompiler.new(output_dir: output_dir).compile_all
 end

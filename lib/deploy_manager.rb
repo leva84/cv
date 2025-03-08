@@ -7,13 +7,12 @@ class DeployManager
   MAIN_BRANCH = 'main'
   GH_PAGES_BRANCH = 'gh-pages'
   DOCS_DIR = 'docs'
-  TEMP_DIR = '/tmp/deploy_docs'
+  TEMP_DIR = 'tmp/deploy_docs'
 
   attr_reader :logger, :output_dir
 
-  def initialize(output_dir: DOCS_DIR, logger: Logger.new($stdout))
+  def initialize(logger: Logger.new($stdout))
     @logger = logger
-    @output_dir = output_dir
   end
 
   def deploy
@@ -40,10 +39,10 @@ class DeployManager
   # end
 
   def build_site_to_temp
-    logger.info "Building site into temporary directory: #{TEMP_DIR}..."
-    # FileUtils.rm_rf(TEMP_DIR) # Ensure temp dir is clean
+    logger.info "Building site into temporary directory: #{ TEMP_DIR }..."
+    FileUtils.rm_rf(TEMP_DIR) # Ensure temp dir is clean
     FileUtils.mkdir_p(TEMP_DIR) # Recreate temp dir
-    run_command("rake build OUTPUT_DIR=#{ TEMP_DIR }")
+    run_command("RECORD_DIR=#{ TEMP_DIR } rake build")
   end
 
   # Deploys site to gh-pages branch
@@ -53,13 +52,13 @@ class DeployManager
 
     # Restore files from TEMP_DIR to DOCS_DIR
     logger.info "Copying files from temporary directory '#{ TEMP_DIR }' to '#{ DOCS_DIR }'..."
-    FileUtils.rm_rf(output_dir) # Clear docs/ content
-    FileUtils.mkdir_p(output_dir) # Recreate docs/ directory
-    FileUtils.cp_r("#{ TEMP_DIR }/.", output_dir)
+    FileUtils.rm_rf(DOCS_DIR) # Clear docs/ content
+    FileUtils.mkdir_p(DOCS_DIR) # Recreate docs/ directory
+    FileUtils.cp_r("#{ TEMP_DIR }/.", DOCS_DIR)
 
     # Stage and commit changes in the gh-pages branch
     logger.info "Committing changes to #{ GH_PAGES_BRANCH }..."
-    stage_changes(output_dir)
+    stage_changes(DOCS_DIR)
     commit_changes("Deploy updated site - #{ Time.now.strftime('%Y-%m-%d %H:%M:%S') }", skip_empty: true)
     push_changes(GH_PAGES_BRANCH)
 
