@@ -16,16 +16,20 @@ class DeployManager
   end
 
   def deploy
-    ensure_on_branch(MAIN_BRANCH)
     logger.info 'Starting deployment process...'
-
+    ensure_on_branch(MAIN_BRANCH)
     build_site
     copy_site_to_temp
-    stage_changes
-    commit_changes("Deploy updated site - #{ Time.now.strftime('%Y-%m-%d %H:%M:%S') }")
-    push_changes(MAIN_BRANCH)
-    deploy_to_gh_pages
 
+    ensure_on_branch(GH_PAGES_BRANCH)
+    copy_site_from_tmp
+
+    logger.info "Committing changes to #{ GH_PAGES_BRANCH }..."
+    stage_changes(DOCS_DIR)
+    commit_changes("Deploy updated site - #{ Time.now.strftime('%Y-%m-%d %H:%M:%S') }", skip_empty: true)
+    push_changes(GH_PAGES_BRANCH)
+
+    ensure_on_branch(MAIN_BRANCH)
     logger.info 'Deployment successfully completed 🎉'
   end
 
@@ -45,23 +49,11 @@ class DeployManager
     FileUtils.cp_r("#{ DOCS_DIR }/.", TEMP_DIR)
   end
 
-  # Deploys site to gh-pages branch
-  def deploy_to_gh_pages
-    ensure_on_branch(GH_PAGES_BRANCH)
-
-    # Restore files from TEMP_DIR to DOCS_DIR
+  def copy_site_from_tmp
     logger.info "Copying files from temporary directory '#{ TEMP_DIR }' to '#{ DOCS_DIR }'..."
-    FileUtils.rm_rf(DOCS_DIR) # Clear docs/ content
-    FileUtils.mkdir_p(DOCS_DIR) # Recreate docs/ directory
+    FileUtils.rm_rf(DOCS_DIR)
+    FileUtils.mkdir_p(DOCS_DIR)
     FileUtils.cp_r("#{ TEMP_DIR }/.", DOCS_DIR)
-
-    # Stage and commit changes in the gh-pages branch
-    logger.info "Committing changes to #{ GH_PAGES_BRANCH }..."
-    stage_changes(DOCS_DIR)
-    commit_changes("Deploy updated site - #{ Time.now.strftime('%Y-%m-%d %H:%M:%S') }", skip_empty: true)
-    push_changes(GH_PAGES_BRANCH)
-
-    ensure_on_branch(MAIN_BRANCH)
   end
 
   ### Git operations ###
