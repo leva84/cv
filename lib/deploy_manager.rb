@@ -26,7 +26,7 @@ class DeployManager
 
     logger.info "Committing changes to #{ GH_PAGES_BRANCH }..."
     stage_changes(DOCS_DIR)
-    commit_changes("Deploy updated site - #{ Time.now.strftime('%Y-%m-%d %H:%M:%S') }", skip_empty: true)
+    commit_changes("Deploy updated site - #{ Time.now.strftime('%Y-%m-%d %H:%M:%S') }")
     push_changes(GH_PAGES_BRANCH)
 
     ensure_on_branch(MAIN_BRANCH)
@@ -36,7 +36,6 @@ class DeployManager
   private
 
   ### Main stages ###
-
   # Builds static site
   def build_site
     logger.info 'Building site...'
@@ -57,7 +56,6 @@ class DeployManager
   end
 
   ### Git operations ###
-
   def ensure_on_branch(branch)
     current_branch = `git branch --show-current`.strip
     if current_branch != branch
@@ -74,7 +72,6 @@ class DeployManager
   end
 
   ### Git helper methods ###
-
   # Add changes to staging (for a directory or all by default)
   def stage_changes(target = '.')
     logger.info "Staging changes for '#{ target }'..."
@@ -82,26 +79,12 @@ class DeployManager
   end
 
   # Commit changes with a message
-  def commit_changes(message, skip_empty: false)
-    if git_status_clean?
-      if skip_empty
-        logger.info 'No changes to commit. Skipping...'
-        return
-      end
-      abort_with_log("No changes detected. Aborting commit: #{ message }")
-    end
-
+  def commit_changes(message)
     logger.info "Committing changes: #{ message }"
     run_command("git commit -m \"#{ message }\"")
   end
 
-  # Check if working directory is clean
-  def git_status_clean?
-    `git status --porcelain`.strip.empty?
-  end
-
   ### Command wrapper ###
-
   def run_command(cmd)
     result = system(cmd)
     abort_with_log("Command failed: #{ cmd }") unless result
