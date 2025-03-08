@@ -17,23 +17,32 @@ class DeployManager
 
   def deploy
     logger.info 'Starting deployment process...'
-    ensure_on_branch(MAIN_BRANCH)
-    build_site
-    copy_site_to_temp
-
-    ensure_on_branch(GH_PAGES_BRANCH)
-    copy_site_from_tmp
-
-    logger.info "Committing changes to #{ GH_PAGES_BRANCH }..."
-    stage_changes(DOCS_DIR)
-    commit_changes("Deploy updated site - #{ Time.now.strftime('%Y-%m-%d %H:%M:%S') }")
-    push_changes(GH_PAGES_BRANCH)
-
+    before_deploy
+    deploy_to_gh_pages
     ensure_on_branch(MAIN_BRANCH)
     logger.info 'Deployment successfully completed 🎉'
   end
 
   private
+
+  def before_deploy
+    ensure_on_branch(MAIN_BRANCH)
+    build_site
+    copy_site_to_temp
+  end
+
+  def deploy_to_gh_pages
+    ensure_on_branch(GH_PAGES_BRANCH)
+    copy_site_from_tmp
+    commit_and_push_changes
+  end
+
+  def commit_and_push_changes
+    logger.info "Committing changes to #{ GH_PAGES_BRANCH }..."
+    stage_changes(DOCS_DIR)
+    commit_changes("Deploy updated site - #{ Time.now.strftime('%Y-%m-%d %H:%M:%S') }")
+    push_changes(GH_PAGES_BRANCH)
+  end
 
   ### Main stages ###
   # Builds static site
