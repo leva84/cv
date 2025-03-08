@@ -1,24 +1,29 @@
-h2 Опыт работы
-.timeline
-  .timeline-event
-    h5 Senior Software Engineer | Ruby, Ruby on Rails
-    small 2024 - Настоящее время | JumperMedia.co – реклама, медиа и SEO индустрия
-    ul
-      li Разработка серверной части для анализа SEO и оптимизации поисковой выдачи.
-      li Создание высоконагруженного API с нуля до релиза.
-      li Разработка скраперов, процессов CI/CD и автоматизации.
-      li Спроектированные решения для высокой доступности и мониторинга.
-    p.text-muted
-      strong Технологии:
-      | Ruby on Rails, RSpec, TDD, Sidekiq, Redis, PostgreSQL, CI/CD, GitHub Actions
+h2.text-success Опыт работы
+.accordion(id='experience-accordion')
+  .accordion-item
+    h2.accordion-header(id='headingOne')
+      button.accordion-button.collapsed(type='button' data-bs-toggle='collapse' data-bs-target='#collapseOne' aria-expanded='false' aria-controls='collapseOne')
+        | Senior Software Engineer | JumperMedia.co
+    .accordion-collapse.collapse(id='collapseOne' aria-labelledby='headingOne' data-bs-parent='#experience-accordion')
+      .accordion-body
+        ul
+          li Разработка серверной части для анализа SEO и оптимизации поисковой выдачи.
+          li Создание высоконагруженного API с нуля до релиза.
+          li Разработка скраперов, процессов CI/CD и автоматизации.
+        p.text-muted
+          strong Технологии:
+          | Ruby on Rails, RSpec, TDD, Sidekiq, Redis, PostgreSQL, CI/CD, GitHub Actions
 
-  .timeline-event
-    h5 Ruby on Rails Developer
-    small 2022 - 2024 | RTKIT – Провайдер цифровых услуг
-    ul
-      li Работа над внешними RESTful и gRPC сервисами компаний.
-      li Увеличение покрытия тестами до 85%.
-      li Оптимизация кода и повышение производительности ключевых эндпоинтов на 60%.
-    p.text-muted
-      strong Технологии:
-      | Ruby on Rails, RSpec, Redis, Kafka, RabbitMQ, Prometheus
+  .accordion-item
+    h2.accordion-header(id='headingTwo')
+      button.accordion-button.collapsed(type="button" data-bs-toggle='collapse' data-bs-target='#collapseTwo' aria-expanded='false' aria-controls='collapseTwo')
+        | Ruby on Rails Developer | RTKIT
+    .accordion-collapse.collapse(id='collapseTwo' aria-labelledby='headingTwo' data-bs-parent='#experience-accordion')
+      .accordion-body
+        ul
+          li Работа над внешними RESTful и gRPC сервисами компаний.
+          li Увеличение покрытия тестами до 85%.
+          li Оптимизация кода и повышение производительности ключевых эндпоинтов на 60%.
+        p.text-muted
+          strong Технологии:
+          | Ruby on Rails, RSpec, Redis, Kafka, RabbitMQ, Prometheus

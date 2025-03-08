@@ -1,25 +1,18 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #b2cfec;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
 }
 
 h1, h2 {
-    color: #b89406;
+    margin-bottom: 20px;
 }
 
-.timeline {
-    list-style: none;
-    padding-left: 20px;
+.img-fluid {
+    border: 5px solid #ddd;
 }
 
-.timeline-event {
-    margin-bottom: 15px;
-}
-
-.timeline-event h5 {
-    margin-bottom: 5px;
-}
-
-.rounded-circle {
-    border: 5px solid #b89406;
+.accordion-button:not(.collapsed) {
+    background-color: #b2cfec;
+    color: #333;
 }
