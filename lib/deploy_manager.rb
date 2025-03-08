@@ -19,7 +19,8 @@ class DeployManager
     ensure_on_branch(MAIN_BRANCH)
     logger.info 'Starting deployment process...'
 
-    build_site_to_temp
+    build_site
+    copy_site_to_temp
     stage_changes
     commit_changes("Deploy updated site - #{ Time.now.strftime('%Y-%m-%d %H:%M:%S') }")
     push_changes(MAIN_BRANCH)
@@ -33,17 +34,24 @@ class DeployManager
   ### Main stages ###
 
   # Builds static site
-  # def build_site
-  #   logger.info 'Building site...'
-  #   run_command('rake build')
-  # end
-
-  def build_site_to_temp
-    logger.info "Building site into temporary directory: #{ TEMP_DIR }..."
-    FileUtils.rm_rf(TEMP_DIR) # Ensure temp dir is clean
-    FileUtils.mkdir_p(TEMP_DIR) # Recreate temp dir
-    run_command("RECORD_DIR=#{ TEMP_DIR } rake build")
+  def build_site
+    logger.info 'Building site...'
+    run_command('rake build')
   end
+
+  # Copy static site
+  def copy_site_to_temp
+    logger.info 'Copying site...'
+    FileUtils.cp_r("#{ DOCS_DIR }/.", TEMP_DIR)
+  end
+
+  # def build_site_to_temp
+  #   build_site
+  #   logger.info "Building site into temporary directory: #{ TEMP_DIR }..."
+  #   FileUtils.rm_rf(TEMP_DIR) # Ensure temp dir is clean
+  #   FileUtils.mkdir_p(TEMP_DIR) # Recreate temp dir
+  #   run_command("RECORD_DIR=#{ TEMP_DIR } rake build")
+  # end
 
   # Deploys site to gh-pages branch
   def deploy_to_gh_pages
