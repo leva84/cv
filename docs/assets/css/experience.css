@@ -4,6 +4,12 @@
     backdrop-filter: blur(3px);
 }
 
+.accordion h2 {
+    font-weight: 700;
+    text-transform: uppercase;
+    position: relative;
+}
+
 .accordion-item {
     background: transparent;
     border: none;
