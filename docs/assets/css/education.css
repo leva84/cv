@@ -1,0 +1,15 @@
+.education-section {
+    background: linear-gradient(to bottom, rgba(6, 52, 83, 0.4), rgba(14, 78, 142, 0.2)); /* Прозрачный градиент */
+    backdrop-filter: blur(3px); /* Лёгкое размытие заднего фона */
+}
+
+.education-section h2 {
+    font-weight: 700;
+    text-transform: uppercase;
+    position: relative;
+}
+
+.education-section p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
