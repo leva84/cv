@@ -10,5 +10,5 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('scroll', () => {
     const bodyElement = document.body;
     const scrollPosition = window.scrollY;
-    bodyElement.style.backgroundPositionY = `${scrollPosition * 0.5}px`;
+    bodyElement.style.backgroundPositionY = `${scrollPosition * 0.3}px`;
 });

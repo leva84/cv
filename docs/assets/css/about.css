@@ -1,9 +1,6 @@
-
 .about_section {
-    /*background: linear-gradient(to bottom,#3498db, #2c3e50);*/
-
-    background: linear-gradient(to bottom, rgba(17, 100, 156, 0.7), rgba(33, 131, 228, 0.5));
-    color: white;
+    background: linear-gradient(to bottom, rgba(6, 52, 83, 0.4), rgba(14, 78, 142, 0.2));
+    backdrop-filter: blur(3px);
 }
 
 .about_section h2 {
