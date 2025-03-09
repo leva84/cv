@@ -1,10 +1,24 @@
 .header_background {
-    background: url('./../images/1105629993-preview.mp4') no-repeat center center/cover;
-    height: 500px;
+    /*min-height: 70%;*/
+    height: 100vh;
     position: relative;
     color: white;
     display: flex;
     align-items: center;
+    justify-content: center;
+    overflow: hidden; /* Чтобы обрезать видео */
+}
+
+.header_background video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: 0; /* Видео под всеми элементами */
 }
 
 .header_background .overlay {
@@ -14,18 +28,18 @@
     height: 100%;
     top: 0;
     left: 0;
-    z-index: 1;
+    z-index: 1; /* Наложение поверх видео */
 }
 
 .header_background .content {
     position: relative;
-    z-index: 2;
+    z-index: 2; /* Контент поверх видео */
     text-align: center;
 }
 
 .header_background .col-md-6 img {
-    width: 50%;
-    height: 90%;
+    max-width: 60%;
+    max-height: 80%;
     object-fit: cover;
     border-radius: 15px;
     border: 5px solid white;
