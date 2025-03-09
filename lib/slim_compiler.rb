@@ -28,6 +28,20 @@ class SlimCompiler
     logger.info 'The generation is completed.'
   end
 
+  def compile_file(file_name)
+    slim_file = File.join(view_dir, file_name)
+
+    unless File.exist?(slim_file)
+      logger.error "File not found: #{ slim_file }"
+      return
+    end
+
+    logger.info "Compiling single file: '#{ file_name }'..."
+    FileUtils.mkdir_p(output_dir)
+
+    compile_slim(slim_file)
+  end
+
   private
 
   def compile_slim(slim_file)
