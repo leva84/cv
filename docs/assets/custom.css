@@ -3,8 +3,15 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, sans-serif;
-    background-color: rgba(99, 242, 253, 0.19);
+    background: url('./images/programming-background-with-person-working-with-codes-computer.jpg') no-repeat center center;
+    background-size: cover;
+    background-attachment: scroll; /* JS контролирует параллакс */
     color: #333;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    will-change: background-position;
+    transition: background-position 0.1s ease-out;
 }
 
 h1, h2 {
