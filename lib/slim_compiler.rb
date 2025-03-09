@@ -14,6 +14,8 @@ class SlimCompiler
     @view_dir = view_dir
     @output_dir = output_dir
     @logger = logger
+
+    Slim::Engine.set_options(pretty: true)
   end
 
   def compile_all
