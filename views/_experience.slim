@@ -1,25 +1,16 @@
 .container
   .accordion#experience-accordion
     h2.text-white.text-center.mb-4 Опыт работы
-    p.text-center.text-white.mt-3
-      strong Общий стаж ком. разработки:
-      ul#career-experience-list.text-center
-        li 0 лет
-        li 0 месяцев
-        li 0 дней
-        li 0 часов
-        li 0 минут
-        li 0 секунд
     .accordion-item
       h2.accordion-header#headingOne
         button.accordion-button.collapsed(type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne")
-          | Software Engineer |&nbsp;
-          a.text-decoration-none.text-link(href="https://jumpermedia.co" target="_blank" rel="noopener noreferrer") JumperMedia.co
-          | &nbsp;| 2024 - Н/В
+          | Software Engineer | JumperMedia | 2024 - Н/В
       .accordion-collapse.collapse#collapseOne(aria-labelledby="headingOne")
         .accordion-body
           p
-            strong JumperMedia.co – реклама, медиа и SEO индустрия.
+            strong
+              a.text-decoration-none.text-link(href="https://jumpermedia.co" target="_blank" rel="noopener noreferrer") JumperMedia.co
+              |&nbsp; – реклама, медиа и SEO индустрия.
           | Разработка серверной части проекта для анализа SEO параметров web сайтов клиентов и дальнейшей оптимизации поисковой выдачи.
           ul
             li Разработал высоко нагруженный API с нуля до стадии релиза и последующей поддержки (Ruby on Rails, Sidekiq, Redis, PostgreSQL).
@@ -33,13 +24,13 @@
     .accordion-item
       h2.accordion-header#headingTwo
         button.accordion-button.collapsed(type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo")
-          | Ruby Developer |&nbsp;
-          a.text-decoration-none.text-link(href="https://rtkit.ru/directions/videonablyudenie" target="_blank" rel="noopener noreferrer") RTK IT
-          | &nbsp;| 2022 - 2024
+          | Ruby Developer | RTK IT | 2022 - 2024
       .accordion-collapse.collapse#collapseTwo(aria-labelledby="headingTwo")
         .accordion-body
           p
-            strong RTKIT – Провайдер цифровых услуг, решений. Телеком индустрия.
+            strong
+              a.text-decoration-none.text-link(href="https://rtkit.ru/directions/videonablyudenie" target="_blank" rel="noopener noreferrer") RTKIT
+              |&nbsp;– Провайдер цифровых услуг, решений. Телеком индустрия.
           | Разработка, поддержка, интеграция внешних и внутренних API на платформе видеонаблюдения Ростелеком. Разработка, поддержка бэк офиса платформы.
           ul
             li Работал над RESTful API и gRPC внутренний и внешних сервисов. (Rails, Redis, RSpec, TDD, Kafka, RebitMQ, ClickHouse, Prometheus)
