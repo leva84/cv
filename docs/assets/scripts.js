@@ -15,21 +15,21 @@ document.addEventListener('scroll', () => {
 
 document.addEventListener("DOMContentLoaded", function () {
     const startDate = new Date("2020-09-14T00:00:00"); // Дата начала карьеры
-    const experienceList = document.getElementById("career-experience-list");
+    const experienceSpan = document.getElementById("career-experience-timer");
 
-    // Функция для склонения слов
-    function declension(num, singular, few, many) {
+    // Функция для склонения только "лет":
+    function declensionYears(num) {
         const mod10 = num % 10;
         const mod100 = num % 100;
 
         if (mod100 >= 11 && mod100 <= 14) {
-            return many;
+            return "лет";
         } else if (mod10 === 1) {
-            return singular;
+            return "год";
         } else if (mod10 >= 2 && mod10 <= 4) {
-            return few;
+            return "года";
         } else {
-            return many;
+            return "лет";
         }
     }
 
@@ -44,15 +44,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const months = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 30.44)) % 12;
         const years = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 365.25));
 
-        // Обновлять содержимое списка
-        experienceList.innerHTML = `
-      <li>${years} ${declension(years, 'год', 'года', 'лет')}</li>
-      <li>${months} ${declension(months, 'месяц', 'месяца', 'месяцев')}</li>
-      <li>${days} ${declension(days, 'день', 'дня', 'дней')}</li>
-      <li>${hours} ${declension(hours, 'час', 'часа', 'часов')}</li>
-      <li>${minutes} ${declension(minutes, 'минута', 'минуты', 'минут')}</li>
-      <li>${seconds} ${declension(seconds, 'секунда', 'секунды', 'секунд')}</li>
-    `;
+        // Формируем строку с результатами
+        experienceSpan.textContent = `${years} ${declensionYears(years)} ${months} мес. ${days} дн. ${hours.toString().padStart(2, "0")}:${minutes
+            .toString()
+            .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
     }
 
     // Обновлять каждую секунду
