@@ -1,7 +1,6 @@
 .accordion {
     background: transparent;
     border: none;
-    backdrop-filter: blur(3px);
 }
 
 .accordion h2 {
@@ -13,6 +12,7 @@
 .accordion-item {
     background: transparent;
     border: none;
+    backdrop-filter: blur(3px);
 }
 
 .accordion-button {
@@ -42,4 +42,8 @@
 
 .accordion-body ul {
     padding-left: 1.5rem;
+}
+
+.accordion strong {
+    color: #4cc9f0;
 }
