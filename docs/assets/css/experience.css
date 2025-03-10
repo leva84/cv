@@ -47,3 +47,16 @@
 .accordion strong {
     color: #4cc9f0;
 }
+
+#career-experience-list {
+    list-style-type: none; /* убрать стандартные маркеры списка */
+    padding: 0;
+    margin: 0;
+}
+
+#career-experience-list li {
+    font-size: 1.2rem;
+    margin: 0.2rem 0; /* расстояние между строками */
+    color: #4cc9f0; /* подстроено под текущую цветовую схему */
+    font-weight: bold;
+}
