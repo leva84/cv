@@ -1,7 +1,6 @@
 .accordion {
     background: transparent;
     border: none;
-    backdrop-filter: blur(3px);
 }
 
 .accordion h2 {
@@ -13,6 +12,7 @@
 .accordion-item {
     background: transparent;
     border: none;
+    backdrop-filter: blur(3px);
 }
 
 .accordion-button {
