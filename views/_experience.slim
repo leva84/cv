@@ -1,6 +1,15 @@
 .container
   .accordion#experience-accordion
     h2.text-white.text-center.mb-4 Опыт работы
+    p.text-center.text-white.mt-3
+      | Общий стаж ком. разработки:
+      ul#career-experience-list.text-center
+        li 0 лет
+        li 0 месяцев
+        li 0 дней
+        li 0 часов
+        li 0 минут
+        li 0 секунд
     .accordion-item
       h2.accordion-header#headingOne
         button.accordion-button.collapsed(type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne")
@@ -54,3 +63,29 @@
           p
             strong Технологии:
             | Ruby on Rails, Sinatra, Sequel, Grape, RSpec, MVC, PostgreSQL, Bootstrap, Slim, JS, Swagger, API
+
+    .accordion-item
+      h2.accordion-header#headingEducation
+        button.accordion-button.collapsed(type="button" data-bs-toggle="collapse" data-bs-target="#collapseEducation" aria-expanded="false" aria-controls="collapseEducation")
+          | Обучение | 2019 - 2020
+      .accordion-collapse.collapse#collapseEducation(aria-labelledby="headingEducation")
+        .accordion-body
+          ul
+            li
+              strong mkdev – Менторы и наставники по программированию
+              | (Август 2020 – Февраль 2021)
+              p
+                a.text-decoration-none.text-link(href="https://mkdev.me/" target="_blank" rel="noopener noreferrer")
+                  | Ссылка на платформу
+            li
+              strong Хороший программист – Образовательный сайт, где каждый может научиться программировать
+              | (Сентябрь 2019 – Апрель 2020)
+              p
+                a.text-decoration-none.text-link(href="https://goodprogrammer.ru/rails" target="_blank" rel="noopener noreferrer")
+                  | Описание курса
+            li
+              strong RUBY SCHOOL
+              | (Январь 2019 – Август 2019)
+              p
+                a.text-decoration-none.text-link(href="https://rubyschool.us/" target="_blank" rel="noopener noreferrer")
+                  | Курс Романа Пушкина
