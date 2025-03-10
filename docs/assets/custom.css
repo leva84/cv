@@ -1,9 +1,7 @@
 @import url('css/header.css');
 @import url('css/about.css');
 @import url('css/experience.css');
-@import url('css/skills.css');
-@import url('css/education.css');
-@import url('css/languages.css');
+@import url('css/additional.css');
 
 body {
     font-family: 'Segoe UI', Tahoma, sans-serif;
